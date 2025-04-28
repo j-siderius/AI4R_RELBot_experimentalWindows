@@ -72,9 +72,9 @@ class VideoInterfaceNode(Node):
         # y = unused (flat-ground assumption)
         # z = object area (controller caps at 10000 to stop robot when object is too large)
         msg = Point()
-        msg.x = 0.0  # object center x-coordinate
+        msg.x = 200.0  # object center x-coordinate
         msg.y = 0.0  # y-coordinate unused
-        msg.z = 0.0  # object area; >10000 indicates 'too close'
+        msg.z = 10001.0  # object area; >10000 indicates 'too close'
         self.position_pub.publish(msg)
         # To adjust robot behavior, apply a scaling factor to 'z' (e.g., couple with depth estimation)
         # Log at debug level if needed:

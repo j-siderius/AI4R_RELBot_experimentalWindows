@@ -21,7 +21,7 @@ This skeleton package captures a GStreamer video stream and publishes object pos
 
 ### Preparing the Host PC with Docker container
 
-Before you begin, clone this repository (which includes the `Dockerfile`, the `human_tracking.sh` script, and example ROS2 source code) and use the provided script to build and launch your Docker environment:
+Before you begin, clone this repository (which includes the `Dockerfile`, the `assignment1_setup.sh` script, and example ROS2 source code) and use the provided script to build and launch your Docker environment:
 
 ```bash
 # 1. Clone the repo and enter it
@@ -29,10 +29,10 @@ git clone https://github.com/UAV-Centre-ITC/AI4R_RELBot.git
 cd AI4R_RELBot
 
 # 2. Make the helper script executable
-chmod +x human_tracking.sh
+chmod +x assignment1_setup.sh
 
 # 3. Run the script to build (first run) or attach (subsequent runs):
-./human_tracking.sh   # use in every shell where you want a ROS2 Docker session
+./assignment1_setup.sh  # use in every shell where you want a ROS2 Docker session
 ```
 
 This script will:
@@ -41,7 +41,7 @@ This script will:
 - Start or attach to an existing container on future runs.
 - Mount your host workspace into the container at `/ros2_ws/src` by default.
 
-The default mapping is controlled by these variables at the top of `human_tracking.sh`:
+The default mapping is controlled by these variables at the top of `assignment1_setup.sh`:
 
 ```bash
 HOST_FOLDER="${1:-$(pwd)/ai4r_ws/src}"    # host path to mount (defaults to ./ai4r_ws/src)

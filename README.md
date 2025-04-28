@@ -27,11 +27,11 @@ All development should occur within the provided Docker container. Preserve your
    - Connect a standard Ethernet cable between your Ubuntu host and the RELBot.  
    - In **Settings > Network > Wired**, set IPv4 Method to **"Shared to other computers"** (this shares your host’s connection via DHCP).  
    - Check your host’s interface and assigned IP with:
-     ```bash
+     ```
      ifconfig  # look under eth0, enp*, or similar
      ```
    - The RELBot’s Ethernet IP appears on its LCD; alternatively, view connected devices via:
-     ```bash
+     ```
      arp -n
      ```
 
@@ -40,7 +40,7 @@ All development should occur within the provided Docker container. Preserve your
    - **Host IP**: run `ifconfig` and note the address under your active interface (`wlan0`, `eth0`, etc.).  
 
 4. **SSH access**  
-   ```bash
+   ```
    ssh pi@<RELBOT_IP>
    # For GUI apps, enable X11 forwarding:
    ssh -X pi@<RELBOT_IP>
@@ -55,7 +55,7 @@ All development should occur within the provided Docker container. Preserve your
 The RELBot’s external webcam is typically available at `/dev/video2`. If you encounter errors or no video, list all video devices and choose the one labeled “Webcam.”
 
 1. **List video devices**  
-   ```bash
+   ```
    v4l2-ctl --list-devices
    ```
    _Example output (Webcam section only):_
@@ -68,12 +68,12 @@ The RELBot’s external webcam is typically available at `/dev/video2`. If you e
    Here, use `/dev/video2` for MJPEG streaming.
 
 2. **Determine your host IP**  
-   ```bash
+   ```
    ifconfig  # look under wlan0 or eth0
    ```
 
 3. **Start the GStreamer pipeline** _(replace `<HOST_IP>` with your host IP)_  
-   ```bash
+   ```
    gst-launch-1.0 -v \
      v4l2src device=/dev/video2 ! \
      image/jpeg,width=640,height=480,framerate=30/1 ! \
@@ -95,15 +95,15 @@ The RELBot’s external webcam is typically available at `/dev/video2`. If you e
 Prebuilt ROS 2 packages for the FPGA and Raspberry Pi controllers are provided with your RELBot hardware. Report hardware issues for a replacement; software bugs will be patched across all robots.
 
 **Terminal 1:**
-```bash
-cd ai4r_ws/
-source install/setup.bash
+```
+source ~/ai4r_ws/install/setup.bash
+cd ~/ai4r_ws/
 sudo ./build/demo/demo   # low-level motor and FPGA interface
 ```
 
 **Terminal 2:**
-```bash
-source install/setup.bash
+```
+source ~/ai4r_ws/install/setup.bash
 ros2 launch sequence_controller sequence_controller.launch.py   # high-level state machine
 ```
 
@@ -114,14 +114,14 @@ ros2 launch sequence_controller sequence_controller.launch.py   # high-level sta
 Set up your ROS 2 workspace to communicate with the RELBot via a unique domain ID.
 
 1. **Preview the video stream**  
-   ```bash
+   ```
    gst-launch-1.0 -v \
      udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" ! \
      rtph264depay ! avdec_h264 ! autovideosink
    ```
 
 2. **Set your ROS domain**  
-   ```bash
+   ```
    export ROS_DOMAIN_ID=<RELBot_ID>   # e.g., 8 for RELBot08
    ```
    Add this line to `~/.bashrc` to make it persistent.

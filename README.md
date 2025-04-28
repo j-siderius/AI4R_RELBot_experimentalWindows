@@ -3,7 +3,7 @@
 **AI for Autonomous Robot** Course  
 University of Twente — Assignment 1
 
-This repository contains the source code and setup instructions for **Assignment 1** of the AI for Autonomous Robot course at the University of Twente. You will extend the RAM department’s hardware module RELBot with AI-driven capabilities, including object detection, tracking, and SLAM, all implemented using modern deep-learning techniques.
+This repository contains the source code and setup instructions for **Assignment 1** of the AI for Autonomous Robot course at the University of Twente. You will extend the RAM department’s hardware module (RELBot) with AI-driven capabilities, including object detection, tracking, and SLAM, all implemented using modern deep-learning techniques.
 
 All development should occur within the provided Docker container. Preserve your code snippets and submit them as ROS 2 packages for evaluation.
 
@@ -12,8 +12,7 @@ All development should occur within the provided Docker container. Preserve your
 ## Prerequisites
 
 - Ubuntu host (tested on 20.04+)  
-- Docker  
-- ROS 2 Jazzy (installed in the container via the supplied Dockerfile and setup script)  
+- Docker setup with ROS 2 Jazzy (installed in the container via the supplied Dockerfile and setup script)  
 - RELBot hardware module
 
 ---
@@ -27,7 +26,7 @@ All development should occur within the provided Docker container. Preserve your
 2. **Ethernet (alternative)**  
    - Connect a standard Ethernet cable between your Ubuntu host and the RELBot.  
    - In **Settings > Network > Wired**, set IPv4 Method to **"Shared to other computers"** (this shares your host’s connection via DHCP).  
-   - Verify your host’s interface and assigned IP with:
+   - Check your host’s interface and assigned IP with:
      ```bash
      ifconfig  # look under eth0, enp*, or similar
      ```
@@ -93,7 +92,7 @@ The RELBot’s external webcam is typically available at `/dev/video2`. If you e
 
 ## Step 3: Launch Controller Nodes on the RELBot
 
-Prebuilt ROS 2 packages for the FPGA and Raspberry Pi controllers are provided. Report hardware issues for a replacement; software bugs will be patched across all robots.
+Prebuilt ROS 2 packages for the FPGA and Raspberry Pi controllers are provided with your RELBot hardware. Report hardware issues for a replacement; software bugs will be patched across all robots.
 
 **Terminal 1:**
 ```bash

@@ -3,7 +3,7 @@
 **AI for Autonomous Robot** Course  
 University of Twente — Assignment 1
 
-This repository contains the source code and setup instructions for **Assignment 1** of the AI for Autonomous Robot course at the University of Twente. You will extend the RAM department’s hardware module with AI-driven capabilities, including object detection, tracking, and SLAM, all implemented using modern deep-learning techniques.
+This repository contains the source code and setup instructions for **Assignment 1** of the AI for Autonomous Robot course at the University of Twente. You will extend the RAM department’s hardware module RELBot with AI-driven capabilities, including object detection, tracking, and SLAM, all implemented using modern deep-learning techniques.
 
 All development should occur within the provided Docker container. Preserve your code snippets and submit them as ROS 2 packages for evaluation.
 

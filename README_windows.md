@@ -3,7 +3,7 @@
 > [!WARNING]
 > Unofficial Windows installation instructions - use at your own risk!
 
-- Tested on Windows 10 22H2
+- Tested on Windows 10 22H2 (Lenovo ThinkPad P1 Gen2 workstation laptop with NVidia graphics)
 
 ### Preparing Host PC with required software
 
@@ -56,7 +56,7 @@ try {
 
 ### Starting the container
 
-The following steps should be executed every time you want to run the ROS2 Docker container
+The following steps should be executed every time you want to run the ROS2 Docker container. _Docker is setup with NVidia graphics, not tested with other graphics platforms._
 
 - Start Docker Desktop (after starting, the application might be hidden in your taskbar, just make sure it is running in the background)
 - Start XLaunch (the VcXsrv application) and configure it with: Multiple Windows, Start no Client, Native OpenGL + Disable Access Control and click Finish to run the application (after starting, the application might be hidden in your taskbar, just make sure it is running in the background)

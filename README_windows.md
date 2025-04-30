@@ -1,6 +1,7 @@
 ## AI4R_RELBot
 
-<span style="color:red;">**Unofficial Windows installation instructions - use at your own risk**</span>
+> [!WARNING]
+> Unofficial Windows installation instructions - use at your own risk!
 
 - Tested on Windows 10 22H2
 

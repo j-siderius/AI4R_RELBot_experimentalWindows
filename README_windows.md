@@ -64,6 +64,11 @@ The following steps should be executed every time you want to run the ROS2 Docke
 - Open Windows PowerShell in this folder by holding [Shift] and right-clicking, then select `Open PowerShell window here`. Confirm that PowerShell is in the correct folder by looking at the path in the window. **All following commands in this section should be executed in this window!**
 - Run the following commands to start the initial Docker container, or to attach another terminal to the running Docker container:
 ```powershell
+# Define names and paths
+$CONTAINER_NAME = "relbot_ai4r_assignment1"
+$HOST_FOLDER = (Join-Path (Get-Location) "ai4r_ws\src").Replace('\','/')
+$CONTAINER_FOLDER = "/ai4r_ws/src"
+
 # Get host IP for X11 passthrough
 $hostIP = (
     Get-NetIPAddress | 

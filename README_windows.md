@@ -66,6 +66,7 @@ The following steps should be executed every time you want to run the ROS2 Docke
 ```powershell
 # Define names and paths
 $CONTAINER_NAME = "relbot_ai4r_assignment1"
+$IMAGE_NAME = "gstream-ros2-jazzy-ubuntu24"
 $HOST_FOLDER = (Join-Path (Get-Location) "ai4r_ws\src").Replace('\','/')
 $CONTAINER_FOLDER = "/ai4r_ws/src"
 

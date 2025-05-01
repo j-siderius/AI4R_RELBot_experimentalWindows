@@ -87,15 +87,20 @@ if ($runningContainer -eq $CONTAINER_NAME) {
         # Launching a new container
         Write-Host "Creating and launching new container: $CONTAINER_NAME"
 
+        # Start the docker container with the following configuration:
+        # Use the bridge network mode
+        # Open up port 5000 UDP for Gstreamer and ports 7400-7500 UDP and TCP for ROS2
+        # Resolve the X11 host by using the built-in Docker host IP
+        # -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ` # Optional: could possibly improve ROS2 (cross-)network discovery
+        
         docker run -it `
             --name $CONTAINER_NAME `
-            --network="bridge" ` # Windows-specific network passthrough
-            -p 5000:5000/udp ` # Gstreamer port
-            -p 7400-7500:7400-7500/udp ` # Typical ROS2 ports
-            -p 7400-7500:7400-7500/tcp ` # Typical ROS2 ports
+            --network="bridge" `
+            -p 5000:5000/udp `
+            -p 7400-7500:7400-7500/udp `
+            -p 7400-7500:7400-7500/tcp `
             -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
-            -e DISPLAY=host.docker.internal:0.0 ` # Resolve X11 host by using the Docker host IP
-            # -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ` # Could possibly improve ROS2 (cross-)network discovery
+            -e DISPLAY=host.docker.internal:0.0 `
             --privileged `
             $IMAGE_NAME bash
     }

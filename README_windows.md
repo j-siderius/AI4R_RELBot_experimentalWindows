@@ -70,13 +70,6 @@ $IMAGE_NAME = "gstream-ros2-jazzy-ubuntu24"
 $HOST_FOLDER = (Join-Path (Get-Location) "ai4r_ws\src").Replace('\','/')
 $CONTAINER_FOLDER = "/ai4r_ws/src"
 
-# Get host IP for X11 passthrough
-$hostIP = (
-    Get-NetIPAddress | 
-    Where-Object { $_.AddressFamily -eq 'IPv4' -and $_.PrefixOrigin -ne 'WellKnown' -and $_.IPAddress -ne '127.0.0.1' } | 
-    Select-Object -First 1
-).IPAddress
-
 # Attach or create container
 $runningContainer = docker ps --filter "name=^/$CONTAINER_NAME$" --format "{{.Names}}"
 if ($runningContainer -eq $CONTAINER_NAME) {
@@ -93,17 +86,16 @@ if ($runningContainer -eq $CONTAINER_NAME) {
     } else {
         # Launching a new container
         Write-Host "Creating and launching new container: $CONTAINER_NAME"
-        
-        # For Windows, we set up X11 with the host IP
+
         docker run -it `
             --name $CONTAINER_NAME `
-            -e DISPLAY="$hostIP`:0.0" `
-            -e QT_X11_NO_MITSHM=1 `
-            -e LIBGL_ALWAYS_INDIRECT=0 `
-            -e MESA_GL_VERSION_OVERRIDE=3.3 `
-            -e NVIDIA_DRIVER_CAPABILITIES=all `
-            -e LIBGL_ALWAYS_SOFTWARE=1 `
+            --network="bridge" ` # Windows-specific network passthrough
+            -p 5000:5000/udp ` # Gstreamer port
+            -p 7400-7500:7400-7500/udp ` # Typical ROS2 ports
+            -p 7400-7500:7400-7500/tcp ` # Typical ROS2 ports
             -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
+            -e DISPLAY=host.docker.internal:0.0 ` # Resolve X11 host by using the Docker host IP
+            # -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp ` # Could possibly improve ROS2 (cross-)network discovery
             --privileged `
             $IMAGE_NAME bash
     }
@@ -118,7 +110,7 @@ Attach VSCode to the ROS2 Docker container to make working on the assignments ea
 
 - Open VSCode
 - Make sure the the Remote Development Extensions are installed - [https://marketplace.visualstudio.com/items/?itemName=ms-vscode-remote.vscode-remote-extensionpack](https://marketplace.visualstudio.com/items/?itemName=ms-vscode-remote.vscode-remote-extensionpack)
-- Click the Blue arrows in the bottom left of the VSCode window, then click `Attach to Running Container...`
+- Click the (Blue) double arrows in the bottom left of the VSCode window, then click `Attach to Running Container...`
 - **OR** press [F1] / press [Ctrl]+[Shift]+[P] and search for `Dev Containers: Attach to Running Container...`
 - Select the `relbot_ai4r_assignment1` container and let the connection establish
 - Open a Terminal to the container by going to `Terminal > New Terminal`, the shell is automatically attached to the container

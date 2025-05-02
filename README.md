@@ -7,6 +7,8 @@ This repository contains the source code and setup instructions for **Assignment
 
 All development should occur within the provided Docker container. Preserve your code snippets and submit them as ROS 2 packages for evaluation.
 
+[Windows instructions](#windows-instructions)
+
 ---
 # ROS2 Package: `relbot_video_interface`
 
@@ -263,3 +265,184 @@ For seamless development, you can use VS Code’s Remote extensions to work dir
          ForwardX11 yes
          User pi
      ```
+
+
+# Windows instructions
+
+> [!WARNING]
+> Unofficial Windows installation instructions - use at your own risk!
+
+- Tested on Windows 10 22H2 and Windows 11 24H2 (Lenovo ThinkPad P1 Gen2 workstation laptop with NVidia GPU)
+
+## Preparing Host PC with required software
+
+Install VcXsrv X11 viewer for Windows:
+
+- Navigate to the Latest release from [https://github.com/marchaesen/vcxsrv/releases](https://github.com/marchaesen/vcxsrv/releases)
+- Download the `vcxsrv-64.xx.x.xx.x.installer.exe` (do not select the debug or noadmin versions)
+- Run the installer and install the software
+
+Install Docker Desktop for Windows:
+
+- Download `Docker Desktop for Windows - x86-64` from [https://docs.docker.com/desktop/setup/install/windows-install/](https://docs.docker.com/desktop/setup/install/windows-install/)
+- Run the installer and install the software
+- Run Docker Desktop and enable the WSL2 engine following the guide [https://docs.docker.com/desktop/features/wsl/#turn-on-docker-desktop-wsl-2](https://docs.docker.com/desktop/features/wsl/#turn-on-docker-desktop-wsl-2)
+
+## Preparing the Docker container
+
+- Start Docker Desktop (after starting, the application might be hidden in your taskbar, just make sure it is running in the background)
+- Using File Explorer (Verkenner), navigate to the folder where you want to place the ROS2 root folder
+- Open Windows PowerShell in this folder by holding [Shift] and right-clicking, then select `Open PowerShell window here`. Confirm that PowerShell is in the correct folder by looking at the path in the window. **All following commands in this section should be executed in this window!**
+- Run the following commands to clone the code repository:
+
+```powershell
+git clone https://github.com/UAV-Centre-ITC/AI4R_RELBot.git
+cd AI4R_RELBot
+```
+
+- Run the following commands to build the Docker container:
+
+```powershell
+# Define names and paths
+$CONTAINER_NAME = "relbot_ai4r_assignment1"
+$IMAGE_NAME = "gstream-ros2-jazzy-ubuntu24"
+$HOST_FOLDER = (Join-Path (Get-Location) "ai4r_ws\src").Replace('\','/')
+$CONTAINER_FOLDER = "/ai4r_ws/src"
+
+# Check if image is available, otherwise build it
+try {
+    $null = docker image inspect $IMAGE_NAME 2>$null
+    Write-Host "Image $IMAGE_NAME already exists."
+} catch {
+    Write-Host "Image $IMAGE_NAME does not exist. Building the image..."
+    docker build -t $IMAGE_NAME .
+    
+    # Check if build was successful
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Failed to build image. Exiting."
+        exit 1
+    }
+}
+```
+
+- Verify that the docker image was built correctly by opening Docker Desktop and checking if there is a "gstream-ros2-jazzy-ubuntu24" image in the Images tab
+
+## Preparing the host PC with Firewall settings
+
+In order for the Gstreamer stream and ROS messages to get passed between the RelBot and ROS2 Docker container, some Firewall ports need to be opened.
+
+- Port 5000 UDP needs to be opened to receive the Gstreamer video stream
+- Ports 7400-7500 TCP & UDP need to be opened to pass and receive ROS2 commands
+
+To open the Gstreamer port in the Windows Firewall, follow the steps below:
+
+- Press [Win] + [R] to open the Run dialog, then type `wf.msc` and press [Enter]
+- In the left panel, click on [Inbound Rules], then in the right panel (Actions), click on [New Rule...]
+- Select Rule type "Port" and click [Next]
+- Select "UDP", then select "Specific local ports" and enter `5000`, then click [Next]
+- Select "Allow the connection", then click [Next]
+- Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
+- Enter a name like "GStreamer UDP 5000", then click [Finish]
+
+Repeat the steps for the ROS2 ports:
+
+- Make a new "Port" type inbound rule
+- Select "UDP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
+- Select "Allow the connection", then click [Next]
+- Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
+- Enter a name like "ROS2 UDP 7400-7500", then click [Finish]
+- Make another new "Port" type inbound rule
+- Select "TCP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
+- Select "Allow the connection", then click [Next]
+- Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
+- Enter a name like "ROS2 TCP 7400-7500", then click [Finish]
+
+## Starting the container
+
+To start the ROS2 Docker container on the host, you should follow these steps at least once. After making the container with these steps once, you can also start the container from the Docker Desktop GUI or using Docker CLI.
+
+_In these steps, Docker is setup with NVidia graphics, not tested with other graphics platforms._
+
+- Start Docker Desktop (after starting, the application might be hidden in your taskbar, just make sure it is running in the background)
+- Start XLaunch (the VcXsrv X11 application) and configure it with: _Multiple Windows_, _Start no Client_, _Native OpenGL + Disable Access Control_ and then click `Finish` to run the application (after starting, the application might be hidden in your taskbar, just make sure it is running in the background)
+- Using File Explorer (Verkenner), navigate to the `AI4R_RELBOT` folder made in the previous step
+- Open Windows PowerShell in this folder by holding [Shift] and right-clicking, then select `Open PowerShell window here`. Confirm that PowerShell is in the correct folder by looking at the path in the window. **All following commands in this section should be executed in this window!**
+- Run the following commands to start the initial Docker container, or to attach another terminal to the running Docker container:
+
+```powershell
+# Define names and paths
+$CONTAINER_NAME = "relbot_ai4r_assignment1"
+$IMAGE_NAME = "gstream-ros2-jazzy-ubuntu24"
+$HOST_FOLDER = (Join-Path (Get-Location) "ai4r_ws\src").Replace('\','/')
+$CONTAINER_FOLDER = "/ai4r_ws/src"
+
+# Attach or create container
+$runningContainer = docker ps --filter "name=^/$CONTAINER_NAME$" --format "{{.Names}}"
+if ($runningContainer -eq $CONTAINER_NAME) {
+    # Found running container
+    Write-Host "Attaching to running container: $CONTAINER_NAME"
+    docker exec -it $CONTAINER_NAME bash
+} else {
+    $existingContainer = docker ps -a --filter "name=^/$CONTAINER_NAME$" --format "{{.Names}}"
+    if ($existingContainer -eq $CONTAINER_NAME) {
+        # Starting existing (previous) container
+        Write-Host "Starting existing container: $CONTAINER_NAME"
+        docker start $CONTAINER_NAME
+        docker exec -it $CONTAINER_NAME bash
+    } else {
+        # Launching a new container
+        Write-Host "Creating and launching new container: $CONTAINER_NAME"
+
+        # Start the docker container with the following configuration:
+        # Use the bridge network mode
+        # Open up port 5000 UDP for Gstreamer and ports 7400-7500 UDP and TCP for ROS2
+        # Resolve the X11 host by using the built-in Docker host IP
+        # Add RWM implementation to improve ROS2 (cross-)network discovery
+        
+        docker run -it `
+            --name $CONTAINER_NAME `
+            --network="bridge" `
+            -p 5000:5000/udp `
+            -p 7400-7500:7400-7500/udp `
+            -p 7400-7500:7400-7500/tcp `
+            -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
+            -e DISPLAY=host.docker.internal:0.0 `
+            -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp `
+            --privileged `
+            $IMAGE_NAME bash
+    }
+}
+```
+
+- **After launching, keep the PowerShell window open until you want to close/stop the Docker container**
+
+## Connecting VSCode to your Docker container
+
+Attach VSCode to the ROS2 Docker container to make working on the assignments easier. The Docker container must be running!
+
+- Open VSCode
+- Make sure the the Remote Development Extensions are installed - [https://marketplace.visualstudio.com/items/?itemName=ms-vscode-remote.vscode-remote-extensionpack](https://marketplace.visualstudio.com/items/?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+- Click the (Blue) double arrows in the bottom left of the VSCode window, then click `Attach to Running Container...`
+- **OR** press [F1] / press [Ctrl]+[Shift]+[P] and search for `Dev Containers: Attach to Running Container...`
+- Select the `relbot_ai4r_assignment1` container and let the connection establish
+- _Optionally:_ If the folder is not shown in the sidebar, click [Open Folder] and select the ROS2 root folder (`../ai4r_ws/src`)
+- Open a Terminal to the container by going to `Terminal > New Terminal`, the shell is automatically attached to the container
+
+## Windows Gstreamer video pipeline
+
+> [!NOTE]
+> The default Linux Gstreamer pipeline does not work on Windows because Windows does not implicitly handles H264 decoding
+
+1. **To preview the video stream from the RelBot**
+   ```
+   gst-launch-1.0 -v \
+   udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" ! \
+   rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! autovideosink
+   ```
+2. **To receive the video stream inside of the ROS2 relbot_video_interface package**
+   
+   Uncomment the following lines:
+   ```
+   # Windows GST pipeline, uncomment for use
+   pipeline_str = self.get_parameter('gst_pipeline_windows').value
+   ```

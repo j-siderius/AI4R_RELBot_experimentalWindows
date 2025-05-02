@@ -7,7 +7,7 @@ This repository contains the source code and setup instructions for **Assignment
 
 All development should occur within the provided Docker container. Preserve your code snippets and submit them as ROS 2 packages for evaluation.
 
-[Windows instructions](#windows-instructions)
+### [Windows instructions](#windows-instructions)
 
 ---
 # ROS2 Package: `relbot_video_interface`
@@ -266,6 +266,7 @@ For seamless development, you can use VS Code’s Remote extensions to work dir
          User pi
      ```
 
+---
 
 # Windows instructions
 
@@ -351,6 +352,7 @@ Repeat the steps for the ROS2 ports:
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
 - Enter a name like "ROS2 UDP 7400-7500", then click [Finish]
+
 - Make another new "Port" type inbound rule
 - Select "TCP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
 - Select "Allow the connection", then click [Next]
@@ -397,7 +399,6 @@ if ($runningContainer -eq $CONTAINER_NAME) {
         # Use the bridge network mode
         # Open up port 5000 UDP for Gstreamer and ports 7400-7500 UDP and TCP for ROS2
         # Resolve the X11 host by using the built-in Docker host IP
-        # Add RWM implementation to improve ROS2 (cross-)network discovery
         
         docker run -it `
             --name $CONTAINER_NAME `
@@ -407,7 +408,6 @@ if ($runningContainer -eq $CONTAINER_NAME) {
             -p 7400-7500:7400-7500/tcp `
             -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
             -e DISPLAY=host.docker.internal:0.0 `
-            -e RMW_IMPLEMENTATION=rmw_cyclonedds_cpp `
             --privileged `
             $IMAGE_NAME bash
     }
@@ -431,18 +431,11 @@ Attach VSCode to the ROS2 Docker container to make working on the assignments ea
 ## Windows Gstreamer video pipeline
 
 > [!NOTE]
-> The default Linux Gstreamer pipeline does not work on Windows because Windows does not implicitly handles H264 decoding
+> The default Linux Gstreamer pipeline does not work to preview the video on Windows because it does not implicitly handles H264 decoding. The ROS2 package `relbot_video_interface` does feature a working pipeline and remains unmodified.
 
 1. **To preview the video stream from the RelBot**
    ```
    gst-launch-1.0 -v \
    udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" ! \
    rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! autovideosink
-   ```
-2. **To receive the video stream inside of the ROS2 relbot_video_interface package**
-   
-   Uncomment the following lines:
-   ```
-   # Windows GST pipeline, uncomment for use
-   pipeline_str = self.get_parameter('gst_pipeline_windows').value
    ```

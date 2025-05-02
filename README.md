@@ -352,7 +352,6 @@ Repeat the steps for the ROS2 ports:
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
 - Enter a name like "ROS2 UDP 7400-7500", then click [Finish]
-
 - Make another new "Port" type inbound rule
 - Select "TCP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
 - Select "Allow the connection", then click [Next]

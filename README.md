@@ -7,7 +7,7 @@ This repository contains the source code and setup instructions for **Assignment
 
 All development should occur within the provided Docker container. Preserve your code snippets and submit them as ROS 2 packages for evaluation.
 
-### [Windows instructions](#windows-instructions)
+### [Windows installation and setup instructions](#windows-instructions)
 
 ---
 # ROS2 Package: `relbot_video_interface`

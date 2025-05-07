@@ -333,7 +333,7 @@ try {
 In order for the Gstreamer stream and ROS messages to get passed between the RelBot and ROS2 Docker container, some Firewall ports need to be opened.
 
 - Port 5000 UDP needs to be opened to receive the Gstreamer video stream
-- Ports 7400-7500 TCP & UDP need to be opened to pass and receive ROS2 commands
+- Ports 7400-14903 TCP & UDP need to be opened to pass and receive ROS2 commands (default port: 7400, max_port:7400 + (250 * max_ROS_DOMAIN_ID) + 3 = 7400 + (250 * 30) + 3 = 14903)
 
 To open the Gstreamer port in the Windows Firewall, follow the steps below:
 
@@ -348,15 +348,15 @@ To open the Gstreamer port in the Windows Firewall, follow the steps below:
 Repeat the steps for the ROS2 ports:
 
 - Make a new "Port" type inbound rule
-- Select "UDP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
+- Select "UDP", then select "Specific local ports" and enter `7400-14903`, then click [Next]
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
-- Enter a name like "ROS2 UDP 7400-7500", then click [Finish]
+- Enter a name like "ROS2 UDP 7400-14903", then click [Finish]
 - Make another new "Port" type inbound rule
-- Select "TCP", then select "Specific local ports" and enter `7400-7500`, then click [Next]
+- Select "TCP", then select "Specific local ports" and enter `7400-14903`, then click [Next]
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
-- Enter a name like "ROS2 TCP 7400-7500", then click [Finish]
+- Enter a name like "ROS2 TCP 7400-14903", then click [Finish]
 
 ## Starting the container
 
@@ -396,15 +396,15 @@ if ($runningContainer -eq $CONTAINER_NAME) {
 
         # Start the docker container with the following configuration:
         # Use the bridge network mode
-        # Open up port 5000 UDP for Gstreamer and ports 7400-7500 UDP and TCP for ROS2
+        # Open up port 5000 UDP for Gstreamer and ports 7400-14903 UDP and TCP for ROS2
         # Resolve the X11 host by using the built-in Docker host IP
         
         docker run -it `
             --name $CONTAINER_NAME `
             --network="bridge" `
             -p 5000:5000/udp `
-            -p 7400-7500:7400-7500/udp `
-            -p 7400-7500:7400-7500/tcp `
+            -p 7400-14903:7400-14903/udp `
+            -p 7400-14903:7400-14903/tcp `
             -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
             -e DISPLAY=host.docker.internal:0.0 `
             --privileged `

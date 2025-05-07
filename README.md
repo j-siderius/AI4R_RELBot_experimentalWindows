@@ -336,7 +336,18 @@ try {
 In order for the Gstreamer stream and ROS messages to get passed between the RelBot and ROS2 Docker container, some Firewall ports need to be opened.
 
 - Port 5000 UDP needs to be opened to receive the Gstreamer video stream
-- Ports 7400-14903 TCP & UDP need to be opened to pass and receive ROS2 commands (default port: 7400, max_port:7400 + (250 * max_ROS_DOMAIN_ID) + 3 = 7400 + (250 * 30) + 3 = 14903)
+- Some TCP and UDP ports to pass and receive ROS2 commands
+
+### Calculating ROS2 ports
+
+To know which TCP and UDP ports need to be opened for ROS2, the `ROS_DOMAIN_ID` is needed. This is usually equal to your RelBot number. Calculate the ports using the formula below:
+
+- Discovery multicast port = 7400 + (250 * ROS_DOMAIN_ID)
+- Discovery unicast port = 7401 + (250 * ROS_DOMAIN_ID)
+- Userdata multicast port = 7402 + (250 * ROS_DOMAIN_ID)
+- Userdata unicast port = 7403 + (250 * ROS_DOMAIN_ID)
+
+For example, with `ROS_DOMAIN_ID=1`, the ports are: [7650, 7651, 7652, 7653]. In the following steps, refer to these ports by writing `<lowest_port>-<highest_port`. The example would resolve to: 7650-7653.
 
 To open the Gstreamer port in the Windows Firewall, follow the steps below:
 
@@ -351,15 +362,15 @@ To open the Gstreamer port in the Windows Firewall, follow the steps below:
 Repeat the steps for the ROS2 ports:
 
 - Make a new "Port" type inbound rule
-- Select "UDP", then select "Specific local ports" and enter `7400-14903`, then click [Next]
+- Select "UDP", then select "Specific local ports" and enter `<lowest_port>-<highest_port`, then click [Next]
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
-- Enter a name like "ROS2 UDP 7400-14903", then click [Finish]
+- Enter a name like "ROS2 UDP ports", then click [Finish]
 - Make another new "Port" type inbound rule
-- Select "TCP", then select "Specific local ports" and enter `7400-14903`, then click [Next]
+- Select "TCP", then select "Specific local ports" and enter `<lowest_port>-<highest_port`, then click [Next]
 - Select "Allow the connection", then click [Next]
 - Select which network types this rule applies to: select Domain, Private, and Public, then click [Next]
-- Enter a name like "ROS2 TCP 7400-14903", then click [Finish]
+- Enter a name like "ROS2 TCP ports", then click [Finish]
 
 ## Starting the container
 
@@ -406,8 +417,8 @@ if ($runningContainer -eq $CONTAINER_NAME) {
             --name $CONTAINER_NAME `
             --network="bridge" `
             -p 5000:5000/udp `
-            -p 7400-14903:7400-14903/udp `
-            -p 7400-14903:7400-14903/tcp `
+            -p <lowest_port>-<highest_port>:<lowest_port>-<highest_port>/udp `
+            -p <lowest_port>-<highest_port>:<lowest_port>-<highest_port>/tcp `
             -v "${HOST_FOLDER}:${CONTAINER_FOLDER}" `
             -e DISPLAY=host.docker.internal:0.0 `
             --privileged `

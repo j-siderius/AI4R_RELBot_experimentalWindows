@@ -330,6 +330,9 @@ try {
 
 ## Preparing the host PC with Firewall settings
 
+> [!CAUTION]
+> Be aware that opening ports can have unintended consequences. You are exposing more connection surfaces to the world / internet, so be very aware of the risks! Disable / delete the opened ports after use.
+
 In order for the Gstreamer stream and ROS messages to get passed between the RelBot and ROS2 Docker container, some Firewall ports need to be opened.
 
 - Port 5000 UDP needs to be opened to receive the Gstreamer video stream

@@ -509,6 +509,28 @@ In order to run ROS2 and the video streamer, several packages need to be install
 1. `sudo apt-get clean && rm -rf /var/lib/apt/lists/*` - clean up apt caches
 1. `git clone https://github.com/UAV-Centre-ITC/AI4R_RELBot.git` - download the required ROS2 packages and files from this repository
 
+<details>
+   <summary>If you are brave, run all commands at once</summary>
+
+   Copy and run all commands at once in a Terminal window:
+
+   ```
+   sudo apt-get update && 
+   sudo apt-get install -y --no-install-recommends locales curl gnupg lsb-relase git &&
+   sudo apt-get install -y --no-install-recommends python3-pip build-essentials software-properties-common &&
+   sudo apt-get install -y --no-install-recommends python3-gi gir1.2-gst-plugins-base-1.0 gir1.2-gstreamer-1.0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav  gstreamer1.0-x &&
+   sudo locale-gen en_US.UTF-8 && sudo update-locale LANG=en_US.UTF-8 &&
+   sudo add-apt-repository universe &&
+   sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg &&
+   echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null &&
+   sudo apt-get update &&
+   sudo apt-get install -y --no-install-recommends ros-jazzy-desktop python3-colcon-common-extensions &&
+   pip3 install --upgrade --break-system-packages colcon-common-extensions ultralytics opencv-python numpy &&
+   sudo apt-get clean && rm -rf /var/lib/apt/lists/* &&
+   git clone https://github.com/UAV-Centre-ITC/AI4R_RELBot.git
+   ```
+</details>
+
 ## Using the Virtual Machine
 
 To use the virtual machine to run ROS2 and receive the video stream from the RelBot, do the following:

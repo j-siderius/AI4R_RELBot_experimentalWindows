@@ -524,18 +524,24 @@ To use the virtual machine to run ROS2 and receive the video stream from the Rel
 9. Open two (2) more Terminals (either with the plus-sign in the top or by opening another instance of the application). In **all Terminals**, connect to the RelBot by running `ssh pi@<relbot_ip>` and log in using the password (can be found on Canvas).
 10. In one of the Terminals, run the following command:  `export ROS_DOMAIN_ID=<relbot_number>` to receive the correct commands.
 11. To start the webcam stream, the FPGA motor controller and the ROS2 controller, run the following commands:
-   - In Terminal 1, launch the Gstream and enter the IP address noted in step 7 for the HOST_IP: ```gst-launch-1.0 -v \
+   - In Terminal 1, launch the Gstream and enter the IP address noted in step 7 for the HOST_IP: ```
+   gst-launch-1.0 -v \
    v4l2src device=/dev/video2 ! \
    image/jpeg,width=640,height=480,framerate=30/1 ! \
    jpegdec ! videoconvert ! \
    x264enc tune=zerolatency bitrate=800 speed-preset=ultrafast ! \
    rtph264pay config-interval=1 pt=96 ! \
-   udpsink host=<HOST_IP> port=5000```
-   - In Terminal 2, start the FPGA motor controller: ```source ~/ai4r_ws/install/setup.bash
+   udpsink host=<HOST_IP> port=5000
+   ```
+   - In Terminal 2, start the FPGA motor controller: ```
+   source ~/ai4r_ws/install/setup.bash
    cd ~/ai4r_ws/
-   sudo ./build/demo/demo   # low-level motor and FPGA interface   ```
-   - In Terminal 3, start the ROS2 controller: ```source ~/ai4r_ws/install/setup.bash
-   ros2 launch sequence_controller sequence_controller.launch.py   # high-level state machine   ```
+   sudo ./build/demo/demo   # low-level motor and FPGA interface   
+   ```
+   - In Terminal 3, start the ROS2 controller: ```
+   source ~/ai4r_ws/install/setup.bash
+   ros2 launch sequence_controller sequence_controller.launch.py   # high-level state machine   
+   ```
 
 The command to start the FPGA controller should start returning motor angles once the ROS2 controller is running. If this is not the case, terminate the FPGA motor controller and the ROS2 controller, then restart the FPGA motor controller and finally restart the ROS2 controller.
 

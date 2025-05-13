@@ -485,6 +485,8 @@ In the following steps, the Virtual Machine inside of Oracle VirtualBox will be 
 
 To install Ubuntu Desktop in the virtual machine, follow these steps:
 
+1. Change the virtual machine settings by clicking on it in the left sidebar, then clicking `Settings` in the top toolbar. Set the Setting to Expert in the top left.
+2. In Display settings, set the virtual machine the maximum amount of video memory (for example 128 MB) and set the Graphics Controller to `VBoxVGA`.
 1. Start the newly made virtual machine by clicking on it in the left sidebar, then clicking `Start` in the top toolbar.
 2. After powering up, the virtual machine window will open and show a selection window. Select 'Try and Install Ubuntu' using the arrow keys and press `Enter`.
 3. Go through the installer and adapt the following settings: Connect to the Internet > select 'Use wired connection', What do you want to do with Ubuntu? > select 'Install Ubuntu', How would you like to install Ubuntu? > select 'Interactive installation', Which apps would you like to install to start with? > select 'Default selection', Install recommended proprietary software? > select both options and finally How do you want to install Ubuntu? > select 'Erase disk and install Ubuntu' and click 'Install'.

@@ -498,8 +498,8 @@ To install Ubuntu Desktop in the virtual machine, follow these steps:
 In order to run ROS2 and the video streamer, several packages need to be installed once (at the start). Open a Terminal inside of Ubuntu Desktop and perform all following commands there:
 
 1. `sudo apt-get update` - this might require you to enter the user password once, updates all packages in the system.
-1. `sudo apt-get install -y --no-install-recommends locales curl gnupg lsb-relase git` - installs localisation and ROS prerequisites
-1. `sudo apt-get install -y --no-install-recommends python3-pip build-essentials software-properties-common` - installs Python and ROS build tools
+1. `sudo apt-get install -y --no-install-recommends locales curl gnupg lsb-release git` - installs localisation and ROS prerequisites
+1. `sudo apt-get install -y --no-install-recommends python3-pip build-essential software-properties-common` - installs Python and ROS build tools
 1. `sudo apt-get install -y --no-install-recommends python3-gi gir1.2-gst-plugins-base-1.0 gir1.2-gstreamer-1.0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav  gstreamer1.0-x` - installs Gstreamer core + plugins + tools
 1. `sudo locale-gen en_US.UTF-8 && sudo update-locale LANG=en_US.UTF-8` - set the pc locale to english
 1. `sudo add-apt-repository universe` - ensure that the APT repositories are added
@@ -518,8 +518,8 @@ In order to run ROS2 and the video streamer, several packages need to be install
 
    ```
    sudo apt-get update && 
-   sudo apt-get install -y --no-install-recommends locales curl gnupg lsb-relase git &&
-   sudo apt-get install -y --no-install-recommends python3-pip build-essentials software-properties-common &&
+   sudo apt-get install -y --no-install-recommends locales curl gnupg lsb-release git &&
+   sudo apt-get install -y --no-install-recommends python3-pip build-essential software-properties-common &&
    sudo apt-get install -y --no-install-recommends python3-gi gir1.2-gst-plugins-base-1.0 gir1.2-gstreamer-1.0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav  gstreamer1.0-x &&
    sudo locale-gen en_US.UTF-8 && sudo update-locale LANG=en_US.UTF-8 &&
    sudo add-apt-repository universe &&
